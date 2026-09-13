@@ -13,6 +13,12 @@ interface LocationZoneProps {
 }
 
 const OBJECT_ICONS: Record<string, string> = {
+  cd: '💿',
+  tshirt_aluviao: '👕',
+  computador: '💻',
+  boxer: '🩲',
+  caneca: '🍺',
+  garrafa: '🍾',
   servidor: '🖥️',
   terminal: '⌨️',
   pendrive: '💾',
@@ -24,25 +30,26 @@ const OBJECT_ICONS: Record<string, string> = {
   cadeira: '🪑',
   tapete: '🧶',
   estante: '📚',
-  computador: '💻',
 }
 
 const ZONE_COLORS: Record<string, string> = {
-  deti: 'rgba(236, 72, 153, 0.2)',
-  cua: 'rgba(239, 68, 68, 0.15)',
-  biblioteca: 'rgba(59, 130, 246, 0.15)',
-  dmat: 'rgba(168, 85, 247, 0.15)',
-  comp_pedagogico: 'rgba(99, 102, 241, 0.15)',
-  bar: 'rgba(6, 182, 212, 0.15)',
+  autocarro_bar: 'rgba(6, 182, 212, 0.18)',
+  deti: 'rgba(59, 130, 246, 0.18)',
+  biblioteca: 'rgba(99, 102, 241, 0.18)',
+  cua: 'rgba(239, 68, 68, 0.18)',
+  praca: 'rgba(16, 185, 129, 0.18)',
+  drinks: 'rgba(245, 158, 11, 0.18)',
+  desconhecido: 'rgba(190, 24, 93, 0.28)',
 }
 
 const ZONE_BORDERS: Record<string, string> = {
-  deti: 'rgba(236, 72, 153, 0.6)',
-  cua: 'rgba(239, 68, 68, 0.4)',
-  biblioteca: 'rgba(59, 130, 246, 0.4)',
-  dmat: 'rgba(168, 85, 247, 0.4)',
-  comp_pedagogico: 'rgba(99, 102, 241, 0.4)',
-  bar: 'rgba(6, 182, 212, 0.4)',
+  autocarro_bar: 'rgba(6, 182, 212, 0.5)',
+  deti: 'rgba(59, 130, 246, 0.5)',
+  biblioteca: 'rgba(99, 102, 241, 0.5)',
+  cua: 'rgba(239, 68, 68, 0.5)',
+  praca: 'rgba(16, 185, 129, 0.5)',
+  drinks: 'rgba(245, 158, 11, 0.5)',
+  desconhecido: 'rgba(190, 24, 93, 0.8)',
 }
 
 export default function LocationZone({
@@ -53,6 +60,7 @@ export default function LocationZone({
   onRemove,
 }: LocationZoneProps) {
   const isBlocked = cell.terrain === 'blocked'
+  const isMystery = cell.zone_id === 'desconhecido'
   
   const { setNodeRef, isOver } = useDroppable({
     id: cell.id,
@@ -83,6 +91,8 @@ export default function LocationZone({
           ? 'ring-2 ring-amber-400 bg-amber-950/40 z-20'
           : canReceive
           ? 'hover:border-blue-400 bg-blue-950/20'
+          : isMystery
+          ? 'hover:border-pink-500 animate-pulse-slow'
           : 'hover:border-slate-400'
       }`}
       style={{
@@ -90,9 +100,9 @@ export default function LocationZone({
         borderColor: isOver ? undefined : zoneBorder,
       }}
     >
-      {/* Object Icon Label (if IT object or carpet) */}
+      {/* Object Icon Label (if object or carpet) */}
       <div className="w-full flex justify-between items-center text-[9px] font-mono-custom px-0.5 leading-none">
-        <span className="text-slate-500 font-semibold">{cell.x},{cell.y}</span>
+        <span className="text-slate-400 font-semibold">{cell.x},{cell.y}</span>
         {cell.object_type && (
           <span title={cell.object_type} className="text-xs">
             {OBJECT_ICONS[cell.object_type] || '📦'}
@@ -100,6 +110,9 @@ export default function LocationZone({
         )}
         {cell.has_carpet && !cell.object_type && (
           <span title="Tapete" className="text-xs">🧶</span>
+        )}
+        {isMystery && !cell.object_type && (
+          <span title="Cena do Crime" className="text-[10px] text-pink-400 font-bold">❓</span>
         )}
       </div>
 

@@ -1,5 +1,6 @@
 """
-Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid (UA IT Edition)
+Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid
+UA Faina Edition: AUTOCARRO BAR, DETI, BIBLIOTECA, CUA, PRAÇA, DRINKS, DESCONHECIDO
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
@@ -20,31 +21,31 @@ def get_validator_functions(
     """
 
     def c01(p: dict) -> bool:
-        return p.get("barreira") == "8_5"
+        return p.get("barreira") == "2_2"
 
     def c02(p: dict) -> bool:
         return p.get("rodao") == "2_8"
 
     def c03(p: dict) -> bool:
-        return p.get("ines") == "3_5"
+        return p.get("ines") == "5_5"
 
     def c04(p: dict) -> bool:
-        return p.get("sid") == "4_5"
+        return p.get("sid") == "4_6"
 
     def c05(p: dict) -> bool:
-        return p.get("rita") == "1_2"
+        return p.get("rita") == "1_3"
 
     def c06(p: dict) -> bool:
-        return p.get("xuta") == "2_5"
+        return p.get("xuta") == "4_4"
 
     def c07(p: dict) -> bool:
-        return p.get("pancas") == "0_8"
+        return p.get("pancas") == "7_9"
 
     def c08(p: dict) -> bool:
-        return p.get("machado") == "2_2"
+        return p.get("machado") == "2_4"
 
     def c09(p: dict) -> bool:
-        return p.get("calix") == "7_8"
+        return p.get("calix") == "8_5"
 
     def c10(p: dict) -> bool:
         return p.get("mariana") == "8_2"
@@ -66,16 +67,16 @@ def count_valid_solutions(
     solutions: list[dict[str, str]] = []
 
     fixed_constraints = {
-        "barreira": "8_5",
+        "barreira": "2_2",
         "rodao": "2_8",
         "varela": "8_1",
-        "ines": "3_5",
-        "sid": "4_5",
-        "rita": "1_2",
-        "xuta": "2_5",
-        "pancas": "0_8",
-        "machado": "2_2",
-        "calix": "7_8",
+        "ines": "5_5",
+        "sid": "4_6",
+        "rita": "1_3",
+        "xuta": "4_4",
+        "pancas": "7_9",
+        "machado": "2_4",
+        "calix": "8_5",
         "mariana": "8_2",
     }
 
