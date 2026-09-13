@@ -14,29 +14,20 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: GAME_ACCESS_PASSWORD
-        sync: false
+        value: DETI2026
       - key: DATABASE_URL
         value: sqlite+aiosqlite:///./murdoku.db
-        # For PostgreSQL, use:
-        # fromDatabase:
-        #   name: murdoku-db
-        #   property: connectionString
       - key: FRONTEND_URL
         sync: false
       - key: ENVIRONMENT
         value: production
       - key: ACCESS_TOKEN_EXPIRE_HOURS
         value: "24"
-    disk:
-      name: murdoku-data
-      mountPath: /var/data
-      sizeGB: 1
 
   # ─── Frontend (Static Site) ────────────────────────────────────────────────
   - type: web
     name: murdoku-frontend
     runtime: static
-    region: frankfurt
     plan: free
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
@@ -55,12 +46,3 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-
-# ─── Optional: PostgreSQL database ─────────────────────────────────────────
-# Uncomment to add a managed PostgreSQL database:
-# databases:
-#   - name: murdoku-db
-#     region: frankfurt
-#     plan: free
-#     databaseName: murdoku
-#     user: murdoku
