@@ -1,12 +1,5 @@
 """
-Puzzle Validator — Constraint Satisfaction Solver
-═══════════════════════════════════════════════════════════════════════════════
-
-This module verifies that the puzzle clues produce EXACTLY ONE valid solution.
-
-Usage:
-    pytest backend/tests/test_puzzle.py
-
+Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
@@ -23,41 +16,52 @@ def get_validator_functions(
     location_ids: list[str],
 ) -> list[Callable[[dict[str, str]], bool]]:
     """
-    Returns a list of constraint functions corresponding to the clues in game_config.py.
+    Returns spatial constraint validator functions.
     """
 
     def c01(p: dict) -> bool:
-        return p.get("barreira") == "deti"
+        # Barreira na Entrada (8,5)
+        return p.get("barreira") == "8_5"
 
     def c02(p: dict) -> bool:
-        return p.get("rodao") == "comp_pedagogico"
+        # Rodão na Espera (2,8)
+        return p.get("rodao") == "2_8"
 
     def c03(p: dict) -> bool:
-        return p.get("varela") == "labs_deti"
+        # Inês na Área Principal ao lado da TV (3,5)
+        return p.get("ines") == "3_5"
 
     def c04(p: dict) -> bool:
-        return p.get("ines") == "passarela"
+        # Sid na Cadeira (4,5)
+        return p.get("sid") == "4_5"
 
     def c05(p: dict) -> bool:
-        return p.get("sid") == "bar_deti"
+        # Rita no Depósito (1,2)
+        return p.get("rita") == "1_2"
 
     def c06(p: dict) -> bool:
-        return p.get("rita") == "concha"
+        # Xuta no Tapete (2,5)
+        return p.get("xuta") == "2_5"
 
     def c07(p: dict) -> bool:
-        return p.get("xuta") == "cantina"
+        # Panças na Espera junto à Estante (1,8)
+        return p.get("pancas") == "1_8"
 
     def c08(p: dict) -> bool:
-        return p.get("pancas") == "auditorio"
+        # Machado no Depósito junto ao PC (2,2)
+        return p.get("machado") == "2_2"
 
     def c09(p: dict) -> bool:
-        return p.get("machado") == "biblioteca"
+        # Cálix sozinho na Sala dos Funcionários (5,0)
+        return p.get("calix") == "5_0"
 
     def c10(p: dict) -> bool:
-        return p.get("calix") == "relvado"
+        # Mariana nos Labs DETI (8,2)
+        return p.get("mariana") == "8_2"
 
     def c11(p: dict) -> bool:
-        return p.get("mariana") == "dmat"
+        # Varela nos Labs DETI (8,1)
+        return p.get("varela") == "8_1"
 
     return [c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11]
 
@@ -67,23 +71,23 @@ def count_valid_solutions(
     location_ids: list[str],
 ) -> tuple[int, list[dict[str, str]]]:
     """
-    Brute-force count of all valid solutions with greedy pruning.
+    Brute-force spatial constraint solver.
     """
     constraints = get_validator_functions(character_ids, location_ids)
     solutions: list[dict[str, str]] = []
 
     fixed_constraints = {
-        "barreira": "deti",
-        "rodao": "comp_pedagogico",
-        "varela": "labs_deti",
-        "ines": "passarela",
-        "sid": "bar_deti",
-        "rita": "concha",
-        "xuta": "cantina",
-        "pancas": "auditorio",
-        "machado": "biblioteca",
-        "calix": "relvado",
-        "mariana": "dmat",
+        "barreira": "8_5",
+        "rodao": "2_8",
+        "varela": "8_1",
+        "ines": "3_5",
+        "sid": "4_5",
+        "rita": "1_2",
+        "xuta": "2_5",
+        "pancas": "1_8",
+        "machado": "2_2",
+        "calix": "5_0",
+        "mariana": "8_2",
     }
 
     used_locations = list(fixed_constraints.values())

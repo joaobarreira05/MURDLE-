@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import type { Character } from '@/types/game'
-import { getAvatarColor } from './CharacterCard'
+import { getAvatarColor } from '@/lib/colors'
 
 interface CharacterCardDraggingProps {
   character: Character
@@ -9,19 +9,18 @@ interface CharacterCardDraggingProps {
 
 export default function CharacterCardDragging({ character }: CharacterCardDraggingProps) {
   const color = getAvatarColor(character.id)
-  const initials = character.nickname.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+  const initials = character.nickname.slice(0, 2).toUpperCase()
 
   return (
     <motion.div
       initial={{ scale: 1.05, rotate: 1 }}
       animate={{ scale: 1.08, rotate: 2 }}
-      className="flex items-center gap-3 p-3 pointer-events-none"
+      className="flex items-center gap-3 p-3 pointer-events-none rounded-lg"
       style={{
-        background: 'var(--bg-card)',
+        background: '#0D1428',
         border: '2px solid var(--accent-gold)',
         boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,168,67,0.15)',
         minWidth: '180px',
-        borderRadius: '2px',
       }}
     >
       <div

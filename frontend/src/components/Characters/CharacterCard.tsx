@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
 import { X, GripVertical, MapPin } from 'lucide-react'
 import type { Character } from '@/types/game'
+import { getAvatarColor } from '@/lib/colors'
 
 interface CharacterCardProps {
   character: Character
@@ -11,20 +12,6 @@ interface CharacterCardProps {
   locationName: string | null
   onSelect: () => void
   onRemove: () => void
-}
-
-const AVATAR_COLORS = [
-  '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
-  '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16',
-  '#F97316', '#6366F1', '#14B8A6',
-]
-
-export function getAvatarColor(id: string): string {
-  let hash = 0
-  for (let i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
 export default function CharacterCard({
@@ -78,14 +65,13 @@ export default function CharacterCard({
               : '1px solid var(--border)',
         }}
       >
-        {/* Top Header: Drag handle, Avatar, Name & Placed Badge */}
+        {/* Top Header */}
         <div className="flex items-center gap-2">
           <GripVertical
             size={12}
             className="opacity-30 group-hover:opacity-70 flex-shrink-0 text-gray-400"
           />
 
-          {/* Avatar circle */}
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white shadow-inner"
             style={{
@@ -123,7 +109,7 @@ export default function CharacterCard({
           )}
         </div>
 
-        {/* Murdle Style Clue / Hint Bubble underneath card (matching Image 2!) */}
+        {/* Murdle Clue Bubble */}
         {character.clue_hint && (
           <div className="mt-0.5 p-1.5 bg-black/40 rounded border border-white/5 text-[10px] leading-tight text-gray-300 font-mono-custom italic">
             "{character.clue_hint}"

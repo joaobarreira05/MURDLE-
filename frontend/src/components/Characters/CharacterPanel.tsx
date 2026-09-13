@@ -59,6 +59,16 @@ export default function CharacterPanel({
           {characters.map(char => {
             const locId = getLocationForChar(char.id)
             const location = locId ? locById[locId] : null
+            
+            let label: string | null = null
+            if (locId) {
+              if (location) label = location.short_name
+              else {
+                const parts = locId.split('_')
+                if (parts.length === 2) label = `Célula (${parts[0]}, ${parts[1]})`
+                else label = locId
+              }
+            }
 
             return (
               <CharacterCard
@@ -66,7 +76,7 @@ export default function CharacterPanel({
                 character={char}
                 isPlaced={!!locId}
                 isSelected={selectedCharId === char.id}
-                locationName={location?.short_name || null}
+                locationName={label}
                 onSelect={() => {
                   if (selectedCharId === char.id) {
                     onSelectChar(null)

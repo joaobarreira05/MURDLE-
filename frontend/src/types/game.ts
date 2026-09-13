@@ -9,6 +9,23 @@ export interface Character {
   image: string
 }
 
+export interface RoomZone {
+  id: string
+  name: string
+  color: string
+  description: string
+}
+
+export interface GridCellConfig {
+  id: string
+  x: number
+  y: number
+  zone_id: string
+  terrain: 'walkable' | 'object' | 'blocked'
+  object_type: 'mesa' | 'tv' | 'cadeira' | 'tapete' | 'estante' | 'computador' | null
+  has_carpet: boolean
+}
+
 export interface Location {
   id: string
   name: string
@@ -46,6 +63,8 @@ export interface GameStartResponse {
   attempts_remaining: number
   max_attempts: number
   characters: Character[]
+  rooms?: RoomZone[]
+  grid?: GridCellConfig[]
   locations: Location[]
   clues: Clue[]
   current_placement: Record<string, string>
@@ -93,6 +112,8 @@ export interface SessionData {
 
 export interface GameData {
   characters: Character[]
+  rooms?: RoomZone[]
+  grid?: GridCellConfig[]
   locations: Location[]
   clues: Clue[]
 }
@@ -104,6 +125,6 @@ export type DragState = {
   isDragging: boolean
 }
 
-export type PlacementMap = Record<string, string> // char_id → location_id
+export type PlacementMap = Record<string, string> // char_id → cell_id (e.g. "8_5")
 
 export type SubmitState = 'idle' | 'loading' | 'error' | 'success'

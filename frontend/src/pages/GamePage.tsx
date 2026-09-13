@@ -93,14 +93,11 @@ export default function GamePage({
     const { active, over } = event
     if (over) {
       const charId = active.id as string
-      const locationId = over.id as string
-      const isLocation = gameData.locations.some(l => l.id === locationId)
-      if (isLocation) {
-        placeCharacter(charId, locationId)
-        sounds.drop()
-      }
+      const cellId = over.id as string
+      placeCharacter(charId, cellId)
+      sounds.drop()
     }
-  }, [gameData.locations, placeCharacter])
+  }, [placeCharacter])
 
   const handleSubmit = async () => {
     if (placedCount < totalCharacters) {
@@ -195,7 +192,7 @@ export default function GamePage({
             }`}
           >
             <Map size={14} />
-            Mapa
+            Planta 2D
           </button>
           <button
             onClick={() => { setActiveView('grid'); sounds.click(); }}
@@ -244,7 +241,7 @@ export default function GamePage({
             />
           </aside>
 
-          {/* Center Main View (Map or Deduction Grid) */}
+          {/* Center Main View (2D Map or Deduction Grid) */}
           <main className="flex-1 overflow-hidden flex flex-col">
             {activeView === 'map' ? (
               <CampusMap
@@ -254,6 +251,9 @@ export default function GamePage({
                 selectedCharId={selectedCharId}
                 getCharAtLocation={getCharAtLocation}
                 onLocationTap={handleLocationTap}
+                grid={gameData.grid}
+                rooms={gameData.rooms}
+                onRemoveCharacter={removeCharacter}
               />
             ) : (
               <DeductionGrid
