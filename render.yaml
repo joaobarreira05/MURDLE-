@@ -1,0 +1,66 @@
+version: "1"
+services:
+  # ─── Backend (FastAPI) ─────────────────────────────────────────────────────
+  - type: web
+    name: murdoku-backend
+    runtime: python
+    region: frankfurt
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GAME_ACCESS_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./murdoku.db
+        # For PostgreSQL, use:
+        # fromDatabase:
+        #   name: murdoku-db
+        #   property: connectionString
+      - key: FRONTEND_URL
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: ACCESS_TOKEN_EXPIRE_HOURS
+        value: "24"
+    disk:
+      name: murdoku-data
+      mountPath: /var/data
+      sizeGB: 1
+
+  # ─── Frontend (Static Site) ────────────────────────────────────────────────
+  - type: web
+    name: murdoku-frontend
+    runtime: static
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    rootDir: frontend
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+# ─── Optional: PostgreSQL database ─────────────────────────────────────────
+# Uncomment to add a managed PostgreSQL database:
+# databases:
+#   - name: murdoku-db
+#     region: frankfurt
+#     plan: free
+#     databaseName: murdoku
+#     user: murdoku
