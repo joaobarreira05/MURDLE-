@@ -10,7 +10,7 @@ const NARRATIVE_BEATS = [
   { text: 'Um crime perturbou a Faina do DETI.', isTime: false },
   { text: 'Os Aluviões foram atacados durante a noite.', isTime: false },
   { text: 'Onze membros da Comissão de Faina foram vistos espalhados pelo campus da UA.', isTime: false },
-  { text: 'Entre eles está o responsável: Varela.', isTime: false },
+  { text: 'Apenas um deles é o responsável.', isTime: false },
   { text: 'Usa o Caderno de Dedução e as pistas para posicionar cada suspeito.', isTime: false },
   { text: 'RECONSTRUIR OS ACONTECIMENTOS.', isTime: false, isAccent: true },
 ]
