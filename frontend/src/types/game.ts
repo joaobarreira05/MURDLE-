@@ -5,6 +5,7 @@ export interface Character {
   name: string
   nickname: string
   description: string
+  clue_hint?: string
   image: string
 }
 
@@ -13,6 +14,7 @@ export interface Location {
   name: string
   short_name: string
   description: string
+  icon?: string
   map_x: number
   map_y: number
 }

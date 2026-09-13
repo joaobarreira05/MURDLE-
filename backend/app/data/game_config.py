@@ -25,6 +25,7 @@ class Character(TypedDict):
     name: str
     nickname: str
     description: str
+    clue_hint: str  # Personal clue shown under suspect card (Murdle style!)
     image: str
 
 
@@ -33,6 +34,7 @@ class Location(TypedDict):
     name: str
     short_name: str
     description: str
+    icon: str
     map_x: float
     map_y: float
 
@@ -64,138 +66,153 @@ class GameConfig(TypedDict):
 
 
 # ─── CHARACTERS ───────────────────────────────────────────────────────────────
-# Os 11 suspeitos da Comissão de Faina do DETI
-# A vítima: Os Aluviões | O assassino: Varela
+# 11 Suspeitos da Comissão de Faina do DETI
 
 CHARACTERS: list[Character] = [
     {
         "id": "barreira",
         "name": "Barreira",
         "nickname": "Barreira",
-        "description": "Veterano do DETI. Sempre a inspecionar os laboratórios.",
+        "description": "Veterano do DETI.",
+        "clue_hint": "Foi visto na receção do edifício principal do DETI.",
         "image": "character-01.webp",
     },
     {
         "id": "rodao",
         "name": "Rodão",
         "nickname": "Rodão",
-        "description": "Conhece todos os cantos do Complexo Pedagógico.",
+        "description": "Conhece todos os cantos do CP.",
+        "clue_hint": "Passou a tarde em reuniões no Complexo Pedagógico.",
         "image": "character-02.webp",
     },
     {
         "id": "varela",
         "name": "Varela",
         "nickname": "Varela",
-        "description": "O principal suspeito do ataque aos Aluviões. Rosto misterioso.",
+        "description": "Estudante reservado do DETI.",
+        "clue_hint": "Esteve numa zona de equipamento técnico fechado a chave.",
         "image": "character-03.webp",
     },
     {
         "id": "ines",
         "name": "Inês",
         "nickname": "Inês",
-        "description": "Vista a andar apressada perto da Ria de Aveiro.",
+        "description": "Fã de fotografia e natureza.",
+        "clue_hint": "Esteve a tirar fotos na Passarela Pedonal da Ria.",
         "image": "character-04.webp",
     },
     {
         "id": "sid",
         "name": "Sid",
         "nickname": "Sid",
-        "description": "Viciado em café e no ambiente do Bar do DETI.",
+        "description": "Viciado em café expresso.",
+        "clue_hint": "Esteve no Bar do DETI a beber um café concentrado.",
         "image": "character-05.webp",
     },
     {
         "id": "rita",
         "name": "Rita",
         "nickname": "Rita",
-        "description": "Amante de artes e ensaios ao ar livre na Concha Acústica.",
+        "description": "Amante de música e artes.",
+        "clue_hint": "Esteve junto à Concha Acústica a ensaiar com a guitarra.",
         "image": "character-06.webp",
     },
     {
         "id": "xuta",
         "name": "Xuta",
         "nickname": "Xuta",
-        "description": "Líder enérgico. Almoçava descansado na Cantina.",
+        "description": "Membro ativo da Comissão.",
+        "clue_hint": "Almoçava tranquilamente na Cantina de Santiago.",
         "image": "character-07.webp",
     },
     {
         "id": "pancas",
         "name": "Panças",
         "nickname": "Panças",
-        "description": "Sempre no Auditório a fingir que assiste às conferências.",
+        "description": "Gosta de recantos sossegados.",
+        "clue_hint": "Adormeceu nas cadeiras do Auditório Renato Araújo.",
         "image": "character-08.webp",
     },
     {
         "id": "machado",
         "name": "Machado",
         "nickname": "Machado",
-        "description": "Silencioso. Passou o dia escondido entre os livros da Biblioteca.",
+        "description": "Investigador compenetrado.",
+        "clue_hint": "Esteve em silêncio absoluto no 2º andar da Biblioteca.",
         "image": "character-09.webp",
     },
     {
         "id": "calix",
         "name": "Cálix",
         "nickname": "Cálix",
-        "description": "Procurava inspiração no Relvado Central da UA.",
+        "description": "Apreciador do ar livre.",
+        "clue_hint": "Apanhava sol perto do Catavento no Relvado Central.",
         "image": "character-10.webp",
     },
     {
         "id": "mariana",
         "name": "Mariana",
         "nickname": "Mariana",
-        "description": "Especialista em cálculos e residente habitual do DMAT.",
+        "description": "Residente habitual da matemática.",
+        "clue_hint": "Resolveu equações diferenciais no DMAT.",
         "image": "character-11.webp",
     },
 ]
 
 # ─── LOCATIONS ────────────────────────────────────────────────────────────────
-# Locais reais da Universidade de Aveiro (UA)
 
 LOCATIONS: list[Location] = [
     {
         "id": "deti",
         "name": "Departamento de Eletrónica (DETI)",
         "short_name": "DETI",
-        "description": "Edifício 4 do Campus de Santiago.",
-        "map_x": 55.0,
-        "map_y": 35.0,
+        "description": "Edifício principal do DETI",
+        "icon": "💻",
+        "map_x": 52.0,
+        "map_y": 30.0,
     },
     {
         "id": "comp_pedagogico",
         "name": "Complexo Pedagógico (CP)",
         "short_name": "Comp. Pedagógico",
-        "description": "Onde decorrem as grandes aulas teóricas.",
-        "map_x": 38.0,
-        "map_y": 42.0,
+        "description": "Salas de aula e blocos teóricos",
+        "icon": "🏛️",
+        "map_x": 36.0,
+        "map_y": 40.0,
     },
     {
         "id": "cantina",
         "name": "Cantina de Santiago (CUA)",
         "short_name": "Cantina / CUA",
-        "description": "Ponto de encontro para o almoço do campus.",
-        "map_x": 25.0,
+        "description": "Zona de refeições e convívio",
+        "icon": "🍽️",
+        "map_x": 22.0,
         "map_y": 55.0,
     },
     {
         "id": "biblioteca",
         "name": "Biblioteca Universitária",
         "short_name": "Biblioteca UA",
-        "description": "Zona de estudo silencioso desenhada por Siza Vieira.",
-        "map_x": 70.0,
-        "map_y": 52.0,
+        "description": "Estudo e silêncio obrigatório",
+        "icon": "📚",
+        "map_x": 72.0,
+        "map_y": 50.0,
     },
     {
         "id": "dmat",
         "name": "Departamento de Matemática (DMAT)",
         "short_name": "DMAT",
-        "description": "Edifício das equações e fórmulas abstratas.",
+        "description": "Gabinete e salas de cálculo",
+        "icon": "📐",
         "map_x": 42.0,
-        "map_y": 62.0,
+        "map_y": 64.0,
     },
     {
         "id": "relvado",
         "name": "Relvado Central & Catavento",
         "short_name": "Relvado UA",
-        "description": "O coração verde no centro do campus.",
+        "description": "Espaço verde no centro do campus",
+        "icon": "🌿",
         "map_x": 50.0,
         "map_y": 50.0,
     },
@@ -203,41 +220,46 @@ LOCATIONS: list[Location] = [
         "id": "bar_deti",
         "name": "Bar do DETI / Estudantes",
         "short_name": "Bar DETI",
-        "description": "Onde o café a 0.50€ mantém o curso a andar.",
+        "description": "Cafetaria e ponto de encontro",
+        "icon": "☕",
         "map_x": 30.0,
-        "map_y": 40.0,
+        "map_y": 36.0,
     },
     {
         "id": "auditorio",
         "name": "Auditório Renato Araújo",
         "short_name": "Auditório UA",
-        "description": "O grande auditório da Reitoria da UA.",
-        "map_x": 65.0,
-        "map_y": 30.0,
+        "description": "Grande anfiteatro da Reitoria",
+        "icon": "🎭",
+        "map_x": 68.0,
+        "map_y": 28.0,
     },
     {
         "id": "concha",
         "name": "Concha Acústica da UA",
         "short_name": "Concha Acústica",
-        "description": "Palco ao ar livre para atuações e serenatas.",
-        "map_x": 20.0,
+        "description": "Palco ao ar livre",
+        "icon": "🎤",
+        "map_x": 18.0,
         "map_y": 30.0,
     },
     {
         "id": "labs_deti",
-        "name": "Laboratórios de Redes e Hardware (DETI)",
+        "name": "Laboratórios de Hardware (DETI)",
         "short_name": "Labs DETI",
-        "description": "O local exato onde os Aluviões foram surpreendidos!",
-        "map_x": 60.0,
-        "map_y": 42.0,
+        "description": "CRIME SCENE — Onde os Aluviões foram atacados",
+        "icon": "🔬",
+        "map_x": 62.0,
+        "map_y": 40.0,
     },
     {
         "id": "passarela",
         "name": "Passarela Pedonal da Ria",
         "short_name": "Passarela Ria",
-        "description": "Ponte pedonal com vista para a ria de Aveiro.",
-        "map_x": 45.0,
-        "map_y": 28.0,
+        "description": "Ponte pedonal sobre o canal",
+        "icon": "🌉",
+        "map_x": 44.0,
+        "map_y": 24.0,
     },
 ]
 
@@ -260,11 +282,13 @@ SOLUTION: Solution = {
 }
 
 # ─── CLUES ────────────────────────────────────────────────────────────────────
+# DEDUCTION PUZZLE — NO SPOILERS!
+# Player deduces positions, and deduces who was at Labs DETI (the crime scene).
 
 CLUES: list[Clue] = [
     {
         "id": "clue_01",
-        "text": "O Barreira estava na receção do Departamento de Eletrónica (DETI).",
+        "text": "O Barreira estava na receção do edifício principal do DETI.",
         "category": "identity",
     },
     {
@@ -274,8 +298,8 @@ CLUES: list[Clue] = [
     },
     {
         "id": "clue_03",
-        "text": "O Varela, o verdadeiro culpado pelo ataque aos Aluviões, atuou no interior dos Laboratórios do DETI.",
-        "category": "identity",
+        "text": "O suspeito que se encontrava nos Laboratórios do DETI estava sozinho com a vítima no momento do ataque.",
+        "category": "position",
     },
     {
         "id": "clue_04",
@@ -299,12 +323,12 @@ CLUES: list[Clue] = [
     },
     {
         "id": "clue_08",
-        "text": "O Panças estava confortavelmente sentado no Auditório Renato Araújo.",
+        "text": "O Panças estava confortavelmente adormecido no Auditório Renato Araújo.",
         "category": "identity",
     },
     {
         "id": "clue_09",
-        "text": "O Machado esteve em silêncio absoluto na Biblioteca Universitária.",
+        "text": "O Machado esteve em silêncio absoluto no 2º andar da Biblioteca Universitária.",
         "category": "identity",
     },
     {
@@ -314,12 +338,12 @@ CLUES: list[Clue] = [
     },
     {
         "id": "clue_11",
-        "text": "A Mariana estava a resolver equações diferenciais no Departamento de Matemática (DMAT).",
+        "text": "A Mariana estava a resolver equações no Departamento de Matemática (DMAT).",
         "category": "identity",
     },
     {
         "id": "clue_12",
-        "text": "ATENÇÃO: A vítima do crime foi o grupo de Aluviões. O responsável direto pelo ato foi o Varela!",
+        "text": "CRIME SCENE: Os Aluviões foram atacados nos Laboratórios do DETI. A pessoa que lá estava é o ASSASSINO!",
         "category": "exclusion",
     },
 ]
@@ -328,9 +352,9 @@ CLUES: list[Clue] = [
 
 REWARD: Reward = {
     "type": "coordinates",
-    "title": "CASO RESOLVIDO — CRIME NA FAINA DETI",
+    "title": "CASO RESOLVIDO — O ASSASSINO ERA O VARELA!",
     "content": "40.630541, -8.657858",
-    "subtitle": "Universidade de Aveiro — DETI\n\"Desmascaraste o Varela e salvaste a honra dos Aluviões!\"\n\n[O Estandarte e a Praxe do DETI estão a salvo.]",
+    "subtitle": "Universidade de Aveiro — DETI\n\"Deduciste corretamente! O Varela estava nos Laboratórios do DETI e atacou os Aluviões!\"\n\n[A honra dos Aluviões e a Faina do DETI foram salvas!]",
 }
 
 # ─── GAME SETTINGS ────────────────────────────────────────────────────────────
