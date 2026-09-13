@@ -1,6 +1,8 @@
 """
 MURDOKU — Topographic Spatial Grid Game Configuration
-UA Faina Edition: AUTOCARRO BAR, DETI, BIBLIOTECA, CUA, PRAÇA, DRINKS, DESCONHECIDO
+12 Characters (11 Comissão de Faina + 1 Vítima Aluvião)
+Locais UA: AUTOCARRO BAR, DETI, BIBLIOTECA, CUA, PRAÇA, DRINKS, DESCONHECIDO
+Objetos: CD, T-shirt Aluvião, Computador, Tanga/Boxer, Caneca, Garrafa
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
@@ -13,7 +15,9 @@ class Character(TypedDict):
     id: str
     name: str
     nickname: str
+    role: str  # "comissao" | "aluviao"
     description: str
+    traits: str  # e.g. "Barba, óculos, capa"
     clue_hint: str
     image: str
 
@@ -22,6 +26,7 @@ class RoomZone(TypedDict):
     id: str
     name: str
     color: str
+    accent: str
     description: str
 
 
@@ -73,72 +78,102 @@ class GameConfig(TypedDict):
     max_attempts: int
 
 
-# ─── ROOM ZONES (Locais Solicitados da UA + Local DESCONHECIDO) ────────────────
+# ─── ROOM ZONES (6 Locais Oficiais da UA + Local DESCONHECIDO) ────────────────
 
 ROOMS: list[RoomZone] = [
-    {"id": "autocarro_bar", "name": "AUTOCARRO BAR", "color": "#06B6D4", "description": "Ponto de encontro mítico no campus"},
-    {"id": "deti", "name": "DETI", "color": "#3B82F6", "description": "Departamento de Eletrónica, Telecomunicações e Informática"},
-    {"id": "biblioteca", "name": "BIBLIOTECA", "color": "#6366F1", "description": "Biblioteca Universitária da UA"},
-    {"id": "cua", "name": "CUA", "color": "#EF4444", "description": "Cantina e Centro Universitário de Aveiro"},
-    {"id": "praca", "name": "PRAÇA", "color": "#10B981", "description": "Praça central do campus universitário"},
-    {"id": "drinks", "name": "DRINKS", "color": "#F59E0B", "description": "Bar / Ponto de bebidas dos estudantes"},
-    {"id": "desconhecido", "name": "DESCONHECIDO", "color": "#BE185D", "description": "LOCAL SECRETO — Cena do Crime & Ponto da Faina"},
+    {
+        "id": "autocarro_bar",
+        "name": "AUTOCARRO BAR",
+        "color": "#06B6D4",
+        "accent": "rgba(6, 182, 212, 0.25)",
+        "description": "Autocarro icónico da UA — Cerveja fresca e música académica",
+    },
+    {
+        "id": "deti",
+        "name": "DETI",
+        "color": "#3B82F6",
+        "accent": "rgba(59, 130, 246, 0.25)",
+        "description": "Departamento de Eletrónica, Telecomunicações e Informática",
+    },
+    {
+        "id": "biblioteca",
+        "name": "BIBLIOTECA",
+        "color": "#6366F1",
+        "accent": "rgba(99, 102, 241, 0.25)",
+        "description": "Biblioteca Universitária de Siza Vieira — Silêncio e estudo",
+    },
+    {
+        "id": "cua",
+        "name": "CUA",
+        "color": "#EF4444",
+        "accent": "rgba(239, 68, 68, 0.25)",
+        "description": "Cantina e Centro Universitário de Aveiro — Almoço e refeições",
+    },
+    {
+        "id": "praca",
+        "name": "PRAÇA",
+        "color": "#10B981",
+        "accent": "rgba(16, 185, 129, 0.25)",
+        "description": "Praça Central do Campus — Ponto de encontro de praxe",
+    },
+    {
+        "id": "drinks",
+        "name": "DRINKS",
+        "color": "#F59E0B",
+        "accent": "rgba(245, 158, 11, 0.25)",
+        "description": "Zona de bebidas e convívio dos estudantes da Faina",
+    },
+    {
+        "id": "desconhecido",
+        "name": "DESCONHECIDO",
+        "color": "#BE185D",
+        "accent": "rgba(190, 24, 93, 0.35)",
+        "description": "CENA DO CRIME — Onde o Aluvião foi atacado e ponto de encontro da Faina!",
+    },
 ]
 
 
-# ─── 10x10 SPATIAL GRID GENERATION (Objetos: CD, T-shirt Aluvião, Computador, Boxer, etc.) ────
+# ─── 12x12 SPATIAL GRID GENERATION (Regra Murdoku: Linha e Coluna Únicas) ───────
 
 def build_grid() -> list[GridCellConfig]:
     cells: list[GridCellConfig] = []
     
-    # Specified Objects Mapping (x, y)
+    # Specified Object Locations (x, y)
     object_map: dict[tuple[int, int], str] = {
-        (2, 1): "computador",      # DETI
-        (5, 4): "cd",              # PRAÇA
-        (1, 4): "tshirt_aluviao",  # BIBLIOTECA
-        (4, 5): "boxer",           # PRAÇA
-        (7, 8): "caneca",          # AUTOCARRO BAR
-        (8, 4): "garrafa",         # DRINKS
-        (8, 0): "computador",      # DESCONHECIDO
+        (2, 0): "computador",      # DETI (adjacent to Barreira at 1,0)
+        (0, 3): "tshirt_aluviao",  # BIBLIOTECA (adjacent to Rita at 0,4)
+        (4, 5): "cd",              # PRAÇA (adjacent to Inês at 4,6)
+        (7, 7): "boxer",           # PRAÇA (adjacent to Sid at 7,8)
+        (8, 9): "garrafa",         # DRINKS (adjacent to Cálix at 9,9)
+        (9, 11): "caneca",         # AUTOCARRO BAR (adjacent to Panças at 10,11)
+        (9, 1): "computador",      # DESCONHECIDO (terminal de pistas)
     }
     
-    carpet_cells = {(4, 4), (5, 4), (4, 5)}
+    carpet_cells = {(6, 7)}  # Tapete de comando na Praça
     
     blocked_cells = {
-        (0, 2), (5, 2), (5, 3),
-        (3, 7), (6, 7),
-        (6, 0), (6, 1), (6, 2),
+        (6, 0), (6, 1), (6, 2), (6, 3),  # Parede entre DETI e DESCONHECIDO
+        (0, 2), (4, 9), (7, 10),          # Pilares estruturais
     }
 
-    for y in range(10):
-        for x in range(10):
+    def get_zone(x: int, y: int) -> str:
+        if y <= 3:
+            if x <= 5: return "deti"
+            else: return "desconhecido"
+        elif y <= 8:
+            if x <= 3: return "biblioteca"
+            elif x >= 8: return "drinks"
+            else: return "praca"
+        else: # y >= 9
+            if x >= 8 and y == 9: return "drinks"
+            elif x <= 5: return "cua"
+            else: return "autocarro_bar"
+
+    for y in range(12):
+        for x in range(12):
             cell_id = f"{x}_{y}"
+            zone_id = get_zone(x, y)
             
-            # Map zones across the 10x10 grid:
-            # y <= 2, x >= 6 -> DESCONHECIDO (Local secreto do crime)
-            # y <= 2, x < 6  -> DETI
-            # y 3..6, x <= 3 -> BIBLIOTECA
-            # y 3..6, x 4..6 -> PRAÇA
-            # y 3..6, x >= 7 -> DRINKS
-            # y >= 7, x <= 4 -> CUA
-            # y >= 7, x >= 5 -> AUTOCARRO BAR
-            
-            if y <= 2 and x >= 6:
-                zone_id = "desconhecido"
-            elif y <= 2:
-                zone_id = "deti"
-            elif y >= 7 and x <= 4:
-                zone_id = "cua"
-            elif y >= 7:
-                zone_id = "autocarro_bar"
-            elif x <= 3:
-                zone_id = "biblioteca"
-            elif x >= 7:
-                zone_id = "drinks"
-            else:
-                zone_id = "praca"
-                
-            # Terrain
             if (x, y) in blocked_cells:
                 terrain = "blocked"
                 obj = None
@@ -164,96 +199,128 @@ def build_grid() -> list[GridCellConfig]:
 GRID_CELLS = build_grid()
 
 
-# ─── CHARACTERS (11 Suspeitos com Pistas Temáticas) ───────────────────────────
+# ─── CHARACTERS (11 Membros da Comissão + 1 Aluvião Vítima) ───────────────────
 
 CHARACTERS: list[Character] = [
     {
         "id": "barreira",
         "name": "Barreira",
         "nickname": "Barreira",
-        "description": "Veterano da Faina.",
-        "clue_hint": "Ele estava no DETI ao lado de um computador.",
+        "role": "comissao",
+        "description": "Veterano do DETI.",
+        "traits": "Barba, sem óculos",
+        "clue_hint": "Estive no DETI a programar colado ao terminal do computador.",
         "image": "character-01.webp",
+    },
+    {
+        "id": "mariana",
+        "name": "Mariana",
+        "nickname": "Mariana",
+        "role": "comissao",
+        "description": "Comissão de Faina (Aluna exemplar).",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Supervisionava a entrada do DETI longe dos computadores.",
+        "image": "character-11.webp",
     },
     {
         "id": "rodao",
         "name": "Rodão",
         "nickname": "Rodão",
-        "description": "Membro da comissão.",
-        "clue_hint": "Ele estava no CUA a almoçar tranquilamente.",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Óculos, sem barba",
+        "clue_hint": "Almocei sozinho e descansado no CUA com a minha bandeja.",
         "image": "character-02.webp",
     },
     {
-        "id": "varela",
-        "name": "Varela",
-        "nickname": "Varela",
-        "description": "Estudante reservado.",
-        "clue_hint": "Ele esteve sozinho com a vítima num local misterioso.",
-        "image": "character-03.webp",
+        "id": "rita",
+        "name": "Rita",
+        "nickname": "Rita",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Encontrei uma T-shirt rasgada do Aluvião na Biblioteca!",
+        "image": "character-06.webp",
+    },
+    {
+        "id": "machado",
+        "name": "Machado",
+        "nickname": "Machado",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Óculos, sem barba",
+        "clue_hint": "Passei a tarde em silêncio absoluto na Biblioteca a estudar.",
+        "image": "character-09.webp",
+    },
+    {
+        "id": "xuta",
+        "name": "Xuta",
+        "nickname": "Xuta",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Comandei a reunião da Faina de pé sobre o tapete da Praça.",
+        "image": "character-07.webp",
     },
     {
         "id": "ines",
         "name": "Inês",
         "nickname": "Inês",
-        "description": "Estudante de informática.",
-        "clue_hint": "Ela estava na PRAÇA ao lado de um CD de música.",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Estive na Praça a examinar um CD de música académica.",
         "image": "character-04.webp",
     },
     {
         "id": "sid",
         "name": "Sid",
         "nickname": "Sid",
-        "description": "Viciado em café e convívio.",
-        "clue_hint": "Ele estava na PRAÇA ao lado de uma tanga / boxer deixada no chão.",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Barba, sem óculos",
+        "clue_hint": "Tropecei numa tanga/boxer caída no chão da Praça.",
         "image": "character-05.webp",
-    },
-    {
-        "id": "rita",
-        "name": "Rita",
-        "nickname": "Rita",
-        "description": "Membro da organização.",
-        "clue_hint": "Ela estava na BIBLIOTECA ao lado de uma T-shirt de Aluvião.",
-        "image": "character-06.webp",
-    },
-    {
-        "id": "xuta",
-        "name": "Xuta",
-        "nickname": "Xuta",
-        "description": "Líder enérgico da Faina.",
-        "clue_hint": "Ele estava na PRAÇA sobre o tapete central.",
-        "image": "character-07.webp",
     },
     {
         "id": "pancas",
         "name": "Panças",
         "nickname": "Panças",
-        "description": "Apreciador de cerveja fresca.",
-        "clue_hint": "Ele estava no AUTOCARRO BAR ao lado de uma caneca.",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Não saí do Autocarro Bar: estive sempre encostado à caneca de cerveja.",
         "image": "character-08.webp",
-    },
-    {
-        "id": "machado",
-        "name": "Machado",
-        "nickname": "Machado",
-        "description": "Silencioso e observador.",
-        "clue_hint": "Ele estava na BIBLIOTECA a estudar silenciosamente.",
-        "image": "character-09.webp",
     },
     {
         "id": "calix",
         "name": "Cálix",
         "nickname": "Cálix",
-        "description": "Gosta de festejar.",
-        "clue_hint": "Ele estava no DRINKS ao lado de uma garrafa.",
+        "role": "comissao",
+        "description": "Comissão de Faina.",
+        "traits": "Sem óculos, sem barba",
+        "clue_hint": "Passei o convívio no Drinks ao lado da garrafa a celebrar.",
         "image": "character-10.webp",
     },
     {
-        "id": "mariana",
-        "name": "Mariana",
-        "nickname": "Mariana",
-        "description": "A vítima (Aluvião).",
-        "clue_hint": "A vítima. Foi atraída para o local DESCONHECIDO e estava com o atacante.",
-        "image": "character-11.webp",
+        "id": "aluviao",
+        "name": "Aluvião",
+        "nickname": "Aluvião",
+        "role": "aluviao",
+        "description": "O Caloiro / Vítima da Faina.",
+        "traits": "Caloiro, sem capa, Vítima",
+        "clue_hint": "A VÍTIMA. Fui emboscado e arrastado para uma sala secreta...",
+        "image": "character-12.webp",
+    },
+    {
+        "id": "varela",
+        "name": "Varela",
+        "nickname": "Varela",
+        "role": "comissao",
+        "description": "Comissão de Faina reservado.",
+        "traits": "Barba, sem óculos, Capa negra",
+        "clue_hint": "Ninguém me viu nos sítios habituais do campus...",
+        "image": "character-03.webp",
     },
 ]
 
@@ -261,95 +328,92 @@ CHARACTERS: list[Character] = [
 # ─── LOCATIONS (Mapped to 2D Spatial Cell IDs) ────────────────────────────────
 
 LOCATIONS: list[Location] = [
-    {"id": "2_2", "name": "DETI (Computador)", "short_name": "DETI (PC)", "description": "Célula (2,2)", "icon": "💻", "map_x": 20, "map_y": 20},
-    {"id": "2_8", "name": "CUA (Refeitório)", "short_name": "CUA", "description": "Célula (2,8)", "icon": "🍽️", "map_x": 20, "map_y": 80},
-    {"id": "8_1", "name": "DESCONHECIDO (Crime)", "short_name": "DESCONHECIDO", "description": "Célula (8,1)", "icon": "❓", "map_x": 80, "map_y": 10},
-    {"id": "5_5", "name": "PRAÇA (CD)", "short_name": "PRAÇA (CD)", "description": "Célula (5,5)", "icon": "💿", "map_x": 50, "map_y": 50},
-    {"id": "4_6", "name": "PRAÇA (Boxer)", "short_name": "PRAÇA (Boxer)", "description": "Célula (4,6)", "icon": "🩲", "map_x": 40, "map_y": 60},
-    {"id": "1_3", "name": "BIBLIOTECA (T-shirt)", "short_name": "BIBLIOTECA (Tshirt)", "description": "Célula (1,3)", "icon": "👕", "map_x": 10, "map_y": 30},
-    {"id": "4_4", "name": "PRAÇA (Tapete)", "short_name": "PRAÇA (Tapete)", "description": "Célula (4,4)", "icon": "🧶", "map_x": 40, "map_y": 40},
-    {"id": "7_9", "name": "AUTOCARRO BAR (Caneca)", "short_name": "AUTOCARRO BAR", "description": "Célula (7,9)", "icon": "🍺", "map_x": 70, "map_y": 90},
-    {"id": "2_4", "name": "BIBLIOTECA (Estudo)", "short_name": "BIBLIOTECA", "description": "Célula (2,4)", "icon": "📚", "map_x": 20, "map_y": 40},
-    {"id": "8_5", "name": "DRINKS (Garrafa)", "short_name": "DRINKS", "description": "Célula (8,5)", "icon": "🍾", "map_x": 80, "map_y": 50},
-    {"id": "8_2", "name": "DESCONHECIDO (Vítima)", "short_name": "DESCONHECIDO (Aluvião)", "description": "Célula (8,2)", "icon": "🎯", "map_x": 80, "map_y": 20},
+    {"id": "1_0", "name": "DETI (Terminal de Computador)", "short_name": "DETI (Computador)", "description": "Célula (1,0)", "icon": "💻", "map_x": 10, "map_y": 0},
+    {"id": "5_1", "name": "DETI (Entrada Gabinetes)", "short_name": "DETI (Entrada)", "description": "Célula (5,1)", "icon": "🏛️", "map_x": 50, "map_y": 10},
+    {"id": "0_4", "name": "BIBLIOTECA (Junto à T-shirt)", "short_name": "BIBLIOTECA (Tshirt)", "description": "Célula (0,4)", "icon": "👕", "map_x": 0, "map_y": 40},
+    {"id": "2_5", "name": "BIBLIOTECA (Cabine de Estudo)", "short_name": "BIBLIOTECA (Mesa)", "description": "Célula (2,5)", "icon": "📚", "map_x": 20, "map_y": 50},
+    {"id": "4_6", "name": "PRAÇA (Junto ao CD)", "short_name": "PRAÇA (CD)", "description": "Célula (4,6)", "icon": "💿", "map_x": 40, "map_y": 60},
+    {"id": "6_7", "name": "PRAÇA (Tapete Central)", "short_name": "PRAÇA (Tapete)", "description": "Célula (6,7)", "icon": "🧶", "map_x": 60, "map_y": 70},
+    {"id": "7_8", "name": "PRAÇA (Tanga/Boxer Perdida)", "short_name": "PRAÇA (Boxer)", "description": "Célula (7,8)", "icon": "🩲", "map_x": 70, "map_y": 80},
+    {"id": "9_9", "name": "DRINKS (Mesa da Garrafa)", "short_name": "DRINKS", "description": "Célula (9,9)", "icon": "🍾", "map_x": 90, "map_y": 90},
+    {"id": "3_10", "name": "CUA (Mesa de Almoço)", "short_name": "CUA (Refeitório)", "description": "Célula (3,10)", "icon": "🍽️", "map_x": 30, "map_y": 100},
+    {"id": "10_11", "name": "AUTOCARRO BAR (Balcão)", "short_name": "AUTOCARRO BAR", "description": "Célula (10,11)", "icon": "🍺", "map_x": 100, "map_y": 110},
+    {"id": "11_3", "name": "DESCONHECIDO (A Vítima)", "short_name": "DESCONHECIDO (Vítima)", "description": "Célula (11,3)", "icon": "🎯", "map_x": 110, "map_y": 30},
+    {"id": "8_2", "name": "DESCONHECIDO (O Agressor)", "short_name": "DESCONHECIDO (Crime)", "description": "Célula (8,2)", "icon": "❓", "map_x": 80, "map_y": 20},
 ]
 
 
-# ─── SOLUTION (Exact Spatial Cell Placement) ──────────────────────────────────
+# ─── SOLUTION (Exact 12 Character Murdoku Placement: Unique Rows & Cols) ───────
 
 SOLUTION: Solution = {
     "placement": {
-        "barreira": "2_2",
-        "rodao": "2_8",
-        "varela": "8_1",
-        "ines": "5_5",
-        "sid": "4_6",
-        "rita": "1_3",
-        "xuta": "4_4",
-        "pancas": "7_9",
-        "machado": "2_4",
-        "calix": "8_5",
-        "mariana": "8_2",
+        "barreira": "1_0",
+        "mariana": "5_1",
+        "rita": "0_4",
+        "machado": "2_5",
+        "ines": "4_6",
+        "xuta": "6_7",
+        "sid": "7_8",
+        "calix": "9_9",
+        "rodao": "3_10",
+        "pancas": "10_11",
+        "aluviao": "11_3",
+        "varela": "8_2",
     }
 }
 
 
-# ─── CLUES ────────────────────────────────────────────────────────────────────
+# ─── CLUES (Dedução Lógica e Desafiante no estilo Murdle/Murdoku) ──────────────
 
 CLUES: list[Clue] = [
     {
         "id": "clue_01",
-        "text": "O Barreira estava no DETI posicionado ao lado do computador.",
-        "category": "identity",
+        "text": "No DETI encontravam-se apenas duas pessoas da comissão: um veterano com barba que operava o Computador, e uma mulher que geria a entrada oposta.",
+        "category": "position",
     },
     {
         "id": "clue_02",
-        "text": "O Rodão encontrava-se no CUA a almoçar calmamente.",
+        "text": "O refeitório da Cantina (CUA) tinha apenas uma pessoa a almoçar calmamente à mesa, e essa pessoa usava óculos.",
         "category": "identity",
     },
     {
         "id": "clue_03",
-        "text": "A Inês estava na PRAÇA, exatamente ao lado de um CD de música académica.",
+        "text": "Na BIBLIOTECA estavam duas pessoas: o Machado lia em silêncio absoluto com os seus óculos, enquanto uma mulher sem barba nem óculos descobriu a T-shirt rasgada do Aluvião.",
         "category": "identity",
     },
     {
         "id": "clue_04",
-        "text": "O Sid estava na PRAÇA ao lado de uma tanga / boxer que caiu no chão.",
-        "category": "identity",
+        "text": "Na PRAÇA central estavam exatamente três membros: um membro no tapete central, uma mulher que examinava um CD de música académica, e um membro com barba.",
+        "category": "position",
     },
     {
         "id": "clue_05",
-        "text": "A Rita estava na BIBLIOTECA ao lado da T-shirt de Aluvião deixada na mesa.",
+        "text": "O Sid tropeçou embaraçado numa tanga/boxer caída no chão da PRAÇA.",
         "category": "identity",
     },
     {
         "id": "clue_06",
-        "text": "O Xuta estava sobre o tapete central na PRAÇA.",
+        "text": "O Panças não esteve em mais lado nenhum: passou o serão no AUTOCARRO BAR, sozinho e encostado a uma caneca bem fresca.",
         "category": "identity",
     },
     {
         "id": "clue_07",
-        "text": "O Panças estava no AUTOCARRO BAR mesmo ao lado de uma caneca.",
+        "text": "O Cálix esteve a brindar sozinho na zona de convívio dos DRINKS, ao lado de uma garrafa.",
         "category": "identity",
     },
     {
         "id": "clue_08",
-        "text": "O Machado estava na BIBLIOTECA focado em estudar em silêncio.",
+        "text": "O Aluvião (a vítima) foi emboscado e arrastado até ao local DESCONHECIDO, na extremidade da sala.",
         "category": "identity",
     },
     {
         "id": "clue_09",
-        "text": "O Cálix estava no DRINKS ao lado de uma garrafa.",
-        "category": "identity",
+        "text": "REGRA MURDOKU: Em todo o mapa, ao posicionares um suspeito, toda a sua linha e toda a sua coluna ficam bloqueadas com ✕ (máximo de 1 suspeito por linha e por coluna).",
+        "category": "exclusion",
     },
     {
         "id": "clue_10",
-        "text": "A Mariana (Aluvião) foi atraída para o local DESCONHECIDO.",
-        "category": "identity",
-    },
-    {
-        "id": "clue_11",
-        "text": "CRIME SCENE: Apenas duas pessoas estavam no local DESCONHECIDO no momento do ataque: a vítima e o assassino. Descobre o assassino para revelar onde os Aluviões têm de ir ter à Faina!",
+        "text": "CRIME SCENE: Apenas DUAS pessoas estavam no local DESCONHECIDO no momento do ataque — a vítima (Aluvião) e o agressor da Faina com barba e capa negra. Descobre quem sobra da comissão para revelar onde os Aluviões têm de ir ter à Faina!",
         "category": "position",
     },
 ]
@@ -361,7 +425,7 @@ REWARD: Reward = {
     "type": "coordinates",
     "title": "CASO RESOLVIDO — LOCAL DA FAINA REVELADO!",
     "content": "40.630541, -8.657858",
-    "subtitle": "Universidade de Aveiro — Faina DETI\n\"Desmascaraste o Varela! O local DESCONHECIDO é o ponto de encontro secreto!\"\n\n[Aluviões: Dirijam-se a este local agora mesmo para a Faina!]",
+    "subtitle": "Universidade de Aveiro — Faina DETI\n\"Desmascaraste o Varela! O local DESCONHECIDO foi identificado!\"\n\n[Aluviões: Dirijam-se a este local agora mesmo para a Faina!]",
 }
 
 
@@ -377,3 +441,4 @@ GAME_CONFIG: GameConfig = {
     "reward": REWARD,
     "max_attempts": 3,
 }
+

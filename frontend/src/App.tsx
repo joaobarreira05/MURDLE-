@@ -65,6 +65,8 @@ export default function App() {
       const data = await startGame(token)
       setGameData({
         characters: data.characters,
+        rooms: data.rooms,
+        grid: data.grid,
         locations: data.locations,
         clues: data.clues,
       })

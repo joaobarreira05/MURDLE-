@@ -83,17 +83,58 @@ export default function CharacterCard({
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-[var(--text-primary)] truncate">
-              {character.nickname}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-xs font-bold text-[var(--text-primary)] truncate">
+                {character.nickname}
+              </span>
+              {character.role === 'aluviao' ? (
+                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-pink-900/60 text-pink-300 border border-pink-700">
+                  🎯 VÍTIMA
+                </span>
+              ) : (
+                <span className="text-[9px] px-1 py-0.2 rounded bg-blue-950/60 text-blue-300 border border-blue-800/40">
+                  COMISSÃO
+                </span>
+              )}
             </div>
+
             {locationName ? (
-              <div className="text-[10px] font-mono-custom text-emerald-400 flex items-center gap-1 font-semibold truncate">
+              <div className="text-[10px] font-mono-custom text-emerald-400 flex items-center gap-1 font-semibold truncate mt-0.5">
                 <MapPin size={9} />
                 {locationName}
               </div>
             ) : (
-              <div className="text-[10px] text-[var(--text-muted)] truncate">
+              <div className="text-[10px] text-[var(--text-muted)] truncate mt-0.5">
                 {character.description}
+              </div>
+            )}
+
+            {/* Trait badges for logical deduction */}
+            {character.traits && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {character.traits.split(',').map((trait, idx) => {
+                  const t = trait.trim()
+                  if (t.toLowerCase().includes('líder')) return null
+                  const isBeard = t.toLowerCase().includes('barba') && !t.toLowerCase().includes('sem barba')
+                  const isGlasses = t.toLowerCase().includes('óculos') && !t.toLowerCase().includes('sem óculos')
+                  const isVictim = t.toLowerCase().includes('vítima') || t.toLowerCase().includes('caloiro')
+                  return (
+                    <span
+                      key={idx}
+                      className={`text-[9px] font-mono-custom px-1.5 py-0.5 rounded border ${
+                        isBeard
+                          ? 'bg-amber-950/40 border-amber-600/50 text-amber-300'
+                          : isGlasses
+                          ? 'bg-cyan-950/40 border-cyan-600/50 text-cyan-300'
+                          : isVictim
+                          ? 'bg-red-950/50 border-red-500/50 text-red-300 font-bold'
+                          : 'bg-slate-800/60 border-slate-700 text-slate-300'
+                      }`}
+                    >
+                      {isBeard ? '🧔 ' : isGlasses ? '👓 ' : ''}{t}
+                    </span>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -108,13 +149,6 @@ export default function CharacterCard({
             </button>
           )}
         </div>
-
-        {/* Murdle Clue Bubble */}
-        {character.clue_hint && (
-          <div className="mt-0.5 p-1.5 bg-black/40 rounded border border-white/5 text-[10px] leading-tight text-gray-300 font-mono-custom italic">
-            "{character.clue_hint}"
-          </div>
-        )}
       </div>
     </motion.div>
   )

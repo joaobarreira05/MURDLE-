@@ -4,7 +4,9 @@ export interface Character {
   id: string
   name: string
   nickname: string
+  role?: string
   description: string
+  traits?: string
   clue_hint?: string
   image: string
 }
@@ -22,7 +24,7 @@ export interface GridCellConfig {
   y: number
   zone_id: string
   terrain: 'walkable' | 'object' | 'blocked'
-  object_type: 'mesa' | 'tv' | 'cadeira' | 'tapete' | 'estante' | 'computador' | null
+  object_type: string | null
   has_carpet: boolean
 }
 

@@ -56,6 +56,8 @@ class GameStartResponse(BaseModel):
     attempts_remaining: int
     max_attempts: int
     characters: list[dict]
+    rooms: Optional[list[dict]] = None
+    grid: Optional[list[dict]] = None
     locations: list[dict]
     clues: list[dict]
     current_placement: dict
@@ -112,6 +114,8 @@ async def start_game(
         attempts_remaining=session.attempts_remaining,
         max_attempts=session.max_attempts,
         characters=GAME_CONFIG["characters"],
+        rooms=GAME_CONFIG["rooms"],
+        grid=GAME_CONFIG["grid"],
         locations=GAME_CONFIG["locations"],
         clues=GAME_CONFIG["clues"],
         current_placement={},

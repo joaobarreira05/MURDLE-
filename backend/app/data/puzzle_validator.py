@@ -1,6 +1,6 @@
 """
 Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid
-UA Faina Edition: AUTOCARRO BAR, DETI, BIBLIOTECA, CUA, PRAÇA, DRINKS, DESCONHECIDO
+UA Faina Edition: 12 Characters (11 Comissão + 1 Aluvião Vítima)
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
@@ -21,39 +21,42 @@ def get_validator_functions(
     """
 
     def c01(p: dict) -> bool:
-        return p.get("barreira") == "2_2"
+        return p.get("barreira") == "1_0"
 
     def c02(p: dict) -> bool:
-        return p.get("rodao") == "2_8"
+        return p.get("mariana") == "5_1"
 
     def c03(p: dict) -> bool:
-        return p.get("ines") == "5_5"
+        return p.get("rita") == "0_4"
 
     def c04(p: dict) -> bool:
-        return p.get("sid") == "4_6"
+        return p.get("machado") == "2_5"
 
     def c05(p: dict) -> bool:
-        return p.get("rita") == "1_3"
+        return p.get("ines") == "4_6"
 
     def c06(p: dict) -> bool:
-        return p.get("xuta") == "4_4"
+        return p.get("xuta") == "6_7"
 
     def c07(p: dict) -> bool:
-        return p.get("pancas") == "7_9"
+        return p.get("sid") == "7_8"
 
     def c08(p: dict) -> bool:
-        return p.get("machado") == "2_4"
+        return p.get("calix") == "9_9"
 
     def c09(p: dict) -> bool:
-        return p.get("calix") == "8_5"
+        return p.get("rodao") == "3_10"
 
     def c10(p: dict) -> bool:
-        return p.get("mariana") == "8_2"
+        return p.get("pancas") == "10_11"
 
     def c11(p: dict) -> bool:
-        return p.get("varela") == "8_1"
+        return p.get("aluviao") == "11_3"
 
-    return [c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11]
+    def c12(p: dict) -> bool:
+        return p.get("varela") == "8_2"
+
+    return [c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11, c12]
 
 
 def count_valid_solutions(
@@ -67,17 +70,18 @@ def count_valid_solutions(
     solutions: list[dict[str, str]] = []
 
     fixed_constraints = {
-        "barreira": "2_2",
-        "rodao": "2_8",
-        "varela": "8_1",
-        "ines": "5_5",
-        "sid": "4_6",
-        "rita": "1_3",
-        "xuta": "4_4",
-        "pancas": "7_9",
-        "machado": "2_4",
-        "calix": "8_5",
-        "mariana": "8_2",
+        "barreira": "1_0",
+        "mariana": "5_1",
+        "rita": "0_4",
+        "machado": "2_5",
+        "ines": "4_6",
+        "xuta": "6_7",
+        "sid": "7_8",
+        "calix": "9_9",
+        "rodao": "3_10",
+        "pancas": "10_11",
+        "aluviao": "11_3",
+        "varela": "8_2",
     }
 
     used_locations = list(fixed_constraints.values())
