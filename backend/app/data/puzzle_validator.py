@@ -1,5 +1,5 @@
 """
-Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid
+Puzzle Validator — Constraint Satisfaction Solver for Spatial Grid (UA IT Edition)
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
@@ -20,47 +20,36 @@ def get_validator_functions(
     """
 
     def c01(p: dict) -> bool:
-        # Barreira na Entrada (8,5)
         return p.get("barreira") == "8_5"
 
     def c02(p: dict) -> bool:
-        # Rodão na Espera (2,8)
         return p.get("rodao") == "2_8"
 
     def c03(p: dict) -> bool:
-        # Inês na Área Principal ao lado da TV (3,5)
         return p.get("ines") == "3_5"
 
     def c04(p: dict) -> bool:
-        # Sid na Cadeira (4,5)
         return p.get("sid") == "4_5"
 
     def c05(p: dict) -> bool:
-        # Rita no Depósito (1,2)
         return p.get("rita") == "1_2"
 
     def c06(p: dict) -> bool:
-        # Xuta no Tapete (2,5)
         return p.get("xuta") == "2_5"
 
     def c07(p: dict) -> bool:
-        # Panças na Espera junto à Estante (1,8)
-        return p.get("pancas") == "1_8"
+        return p.get("pancas") == "0_8"
 
     def c08(p: dict) -> bool:
-        # Machado no Depósito junto ao PC (2,2)
         return p.get("machado") == "2_2"
 
     def c09(p: dict) -> bool:
-        # Cálix sozinho na Sala dos Funcionários (5,0)
-        return p.get("calix") == "5_0"
+        return p.get("calix") == "7_8"
 
     def c10(p: dict) -> bool:
-        # Mariana nos Labs DETI (8,2)
         return p.get("mariana") == "8_2"
 
     def c11(p: dict) -> bool:
-        # Varela nos Labs DETI (8,1)
         return p.get("varela") == "8_1"
 
     return [c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11]
@@ -84,9 +73,9 @@ def count_valid_solutions(
         "sid": "4_5",
         "rita": "1_2",
         "xuta": "2_5",
-        "pancas": "1_8",
+        "pancas": "0_8",
         "machado": "2_2",
-        "calix": "5_0",
+        "calix": "7_8",
         "mariana": "8_2",
     }
 

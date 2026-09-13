@@ -16,12 +16,12 @@ interface CampusMapProps {
 }
 
 const DEFAULT_ROOMS: RoomZone[] = [
-  { id: 'sala_funcionarios', name: 'Sala dos Funcionários', color: '#A855F7', description: 'Zona norte' },
-  { id: 'deposito', name: 'Depósito', color: '#3B82F6', description: 'Armazém' },
-  { id: 'area_principal', name: 'Área Principal', color: '#6366F1', description: 'Salão central' },
-  { id: 'entrada', name: 'Entrada', color: '#EF4444', description: 'Porta principal' },
-  { id: 'sala_espera', name: 'Sala de Espera', color: '#06B6D4', description: 'Atendimento' },
-  { id: 'labs_deti', name: 'Labs DETI', color: '#EC4899', description: 'Crime Scene' },
+  { id: 'deti', name: 'DETI', color: '#EC4899', description: 'Departamento de Eletrónica — CRIME SCENE' },
+  { id: 'cua', name: 'CUA', color: '#EF4444', description: 'Cantina de Santiago' },
+  { id: 'biblioteca', name: 'BIBLIOTECA', color: '#3B82F6', description: 'Biblioteca UA' },
+  { id: 'dmat', name: 'DMAT', color: '#A855F7', description: 'Departamento de Matemática' },
+  { id: 'comp_pedagogico', name: 'COMPLEXO PEDAGÓGICO', color: '#6366F1', description: 'Blocos de Aulas Teóricas' },
+  { id: 'bar', name: 'BAR', color: '#06B6D4', description: 'Bar dos Estudantes' },
 ]
 
 export default function CampusMap({
@@ -41,11 +41,12 @@ export default function CampusMap({
     const y = Math.floor(i / 10)
     const cellId = `${x}_${y}`
 
-    let zoneId = 'area_principal'
-    if (y <= 1 && x >= 5) zoneId = x >= 7 ? 'labs_deti' : 'sala_funcionarios'
-    else if (y <= 3 && x <= 3) zoneId = 'deposito'
-    else if (y >= 7) zoneId = 'sala_espera'
-    else if (x >= 7 && y >= 4 && y <= 6) zoneId = 'entrada'
+    let zoneId = 'comp_pedagogico'
+    if (y <= 1 && x >= 5) zoneId = 'deti'
+    else if (y <= 3 && x <= 3) zoneId = 'biblioteca'
+    else if (y >= 7 && x <= 4) zoneId = 'cua'
+    else if (y >= 7 && x >= 5) zoneId = 'bar'
+    else if (x >= 7 && y >= 4 && y <= 6) zoneId = 'dmat'
 
     const blocked = (x === 0 && y === 3) || (x === 1 && y === 3) || (x === 4 && y === 3) || (x === 5 && y === 3) || (x === 6 && y === 4)
 
@@ -60,7 +61,6 @@ export default function CampusMap({
     }
   })
 
-  // Reverse mapping: cellId -> char
   const charAtCell: Record<string, Character> = {}
   Object.entries(placement).forEach(([charId, cellId]) => {
     if (charById[charId]) {
@@ -73,13 +73,13 @@ export default function CampusMap({
       {/* Room Zone Color Legend Bar */}
       <div className="w-full max-w-[800px] mb-3 flex flex-wrap items-center justify-between gap-2 p-2 bg-[#0D1428] rounded-lg border border-[var(--border)] text-[10px] font-mono-custom">
         <div className="flex items-center gap-1 font-bold text-[var(--accent-gold)]">
-          🏛️ ZONAS DO MAPA:
+          🏛️ ZONAS DO CAMPUS UA:
         </div>
         <div className="flex flex-wrap gap-2">
           {rooms.map(room => (
             <div key={room.id} className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-sm" style={{ background: room.color }} />
-              <span className="text-slate-300">{room.name}</span>
+              <span className="text-slate-300 font-semibold">{room.name}</span>
             </div>
           ))}
         </div>

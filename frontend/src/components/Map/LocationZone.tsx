@@ -13,6 +13,12 @@ interface LocationZoneProps {
 }
 
 const OBJECT_ICONS: Record<string, string> = {
+  servidor: '🖥️',
+  terminal: '⌨️',
+  pendrive: '💾',
+  gpu: '⚡',
+  router: '📶',
+  multimetro: '🔌',
   mesa: '🟫',
   tv: '📺',
   cadeira: '🪑',
@@ -22,21 +28,21 @@ const OBJECT_ICONS: Record<string, string> = {
 }
 
 const ZONE_COLORS: Record<string, string> = {
-  sala_funcionarios: 'rgba(168, 85, 247, 0.15)',
-  deposito: 'rgba(59, 130, 246, 0.15)',
-  area_principal: 'rgba(99, 102, 241, 0.15)',
-  entrada: 'rgba(239, 68, 68, 0.15)',
-  sala_espera: 'rgba(6, 182, 212, 0.15)',
-  labs_deti: 'rgba(236, 72, 153, 0.2)',
+  deti: 'rgba(236, 72, 153, 0.2)',
+  cua: 'rgba(239, 68, 68, 0.15)',
+  biblioteca: 'rgba(59, 130, 246, 0.15)',
+  dmat: 'rgba(168, 85, 247, 0.15)',
+  comp_pedagogico: 'rgba(99, 102, 241, 0.15)',
+  bar: 'rgba(6, 182, 212, 0.15)',
 }
 
 const ZONE_BORDERS: Record<string, string> = {
-  sala_funcionarios: 'rgba(168, 85, 247, 0.4)',
-  deposito: 'rgba(59, 130, 246, 0.4)',
-  area_principal: 'rgba(99, 102, 241, 0.4)',
-  entrada: 'rgba(239, 68, 68, 0.4)',
-  sala_espera: 'rgba(6, 182, 212, 0.4)',
-  labs_deti: 'rgba(236, 72, 153, 0.6)',
+  deti: 'rgba(236, 72, 153, 0.6)',
+  cua: 'rgba(239, 68, 68, 0.4)',
+  biblioteca: 'rgba(59, 130, 246, 0.4)',
+  dmat: 'rgba(168, 85, 247, 0.4)',
+  comp_pedagogico: 'rgba(99, 102, 241, 0.4)',
+  bar: 'rgba(6, 182, 212, 0.4)',
 }
 
 export default function LocationZone({
@@ -84,7 +90,7 @@ export default function LocationZone({
         borderColor: isOver ? undefined : zoneBorder,
       }}
     >
-      {/* Object Icon Label (if object or carpet) */}
+      {/* Object Icon Label (if IT object or carpet) */}
       <div className="w-full flex justify-between items-center text-[9px] font-mono-custom px-0.5 leading-none">
         <span className="text-slate-500 font-semibold">{cell.x},{cell.y}</span>
         {cell.object_type && (
