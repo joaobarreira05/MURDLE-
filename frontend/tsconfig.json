@@ -16,9 +16,9 @@
     "ignoreDeprecations": "6.0",
 
     /* Path aliases */
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["src/*"]
     },
 
     /* Linting */
